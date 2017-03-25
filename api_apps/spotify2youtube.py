@@ -84,13 +84,25 @@ def _select_best_video(videos):
   #           "channelVerified":True
   #        }
 
+  # Method: 1
   # Try to get video from the verified channel from the Top 5 results and choose the one with the max no of subs
-  # TODO: attempt to use keyword "Official music video" in videoTitle for better results!
-  _videos = [vid for vid in videos[:5] if vid["channelVerified"]]         # Get top 5
-  _videos = sorted(_videos, key=lambda k: k["channelSubsCount"], reverse=True)   # Sort in descending order using the subsCount
+  _videos = [vid for vid in videos[:5] if vid["channelVerified"]]               # Get verified channels from the Top 5 results
+  _videos = sorted(_videos, key=lambda k: k["channelSubsCount"], reverse=True)  # Sort in descending order using the subsCount
+  keywords_list = [
+                    ["official", "music", "video"],
+                    ["official", "video"],
+                    ["official", "music", "audio"],
+                    ["official", "lyric", "video"]
+                  ]
+  for keywords in keywords_list:
+    for video in _videos:           # First match the 1st tuple across all the videos, then switch to the next set of keywords
+      _video_name = video["videoTitle"].lower()
+      if all(keyword in _video_name for keyword in keywords):     # Match all keywords in videoName
+        return video
   if len(_videos):
     return _videos[0]
 
+  # Method: 2
   # If heuristic fails, try to return video with max number of subscribers from the verified channel
   # Try this from the remaining results
   _videos = [vid for vid in videos[5:] if vid["channelVerified"]]         # Get top 5
@@ -98,7 +110,9 @@ def _select_best_video(videos):
   if len(_videos):
     return _videos[0]
 
-  return videos[0]      # If nothing works out, then FALLBACK to the 1st result
+  # Fallback:
+  # If nothing works out, then FALLBACK to the 1st result
+  return videos[0]
 
 
 def spotify2youtube(query):
