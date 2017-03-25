@@ -123,7 +123,7 @@ def spotify2youtube(query):
   videos = youtube_search(youtube, query)
   video = _select_best_video(videos)
   #print video
-  response = playlist_add_video(youtube, video["id"], LAST_REDEMPTION_PLAYLIST)
+  response = playlist_add_video(youtube, video["videoId"], LAST_REDEMPTION_PLAYLIST)
   print response
 
 
