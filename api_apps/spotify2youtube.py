@@ -3,6 +3,7 @@
 import httplib2
 import os
 import sys
+import pdb
 
 from apiclient.discovery import build
 from apiclient.errors import HttpError
@@ -59,21 +60,46 @@ def build_youtube_object():
   flow = flow_from_clientsecrets(os.path.join(CLIENT_SECRET_LOCATION, CLIENT_SECRETS_FILE),
     message=MISSING_CLIENT_SECRETS_MESSAGE,
     scope=YOUTUBE_READ_WRITE_SCOPE)
-  
+
   storage = Storage("googlecredentials-oauth2.json")
   credentials = storage.get()
-  
+
   if credentials is None or credentials.invalid:
     flags = argparser.parse_args()
     credentials = run_flow(flow, storage, flags)
-  
+
   youtube = build(YOUTUBE_API_SERVICE_NAME, YOUTUBE_API_VERSION,
     http=credentials.authorize(httplib2.Http()))
   return youtube
 
 
 def _select_best_video(videos):
-  return videos[0]
+  # Time to show some intelligence!
+  # Each video item is of the following format:
+  # item = {
+  #           "videoId":"OjGrcJ4lZCc",
+  #           "videoTitle":"This is title",
+  #           "channelId":"UC0C-w0YjGpqDXGB8IHb662A",
+  #           "channelTitle":"This is channel name",
+  #           "channelVerified":True
+  #        }
+
+  # Try to get video from the verified channel from the Top 5 results and choose the one with the max no of subs
+  # TODO: attempt to use keyword "Official music video" in videoTitle for better results!
+  _videos = [vid for vid in videos[:5] if vid["channelVerified"]]         # Get top 5
+  _videos = sorted(_videos, key=lambda k: k["channelSubsCount"], reverse=True)   # Sort in descending order using the subsCount
+  if len(_videos):
+    return _videos[0]
+
+  # If heuristic fails, try to return video with max number of subscribers from the verified channel
+  # Try this from the remaining results
+  _videos = [vid for vid in videos[5:] if vid["channelVerified"]]         # Get top 5
+  _videos = sorted(videos, key=lambda k: k["channelSubsCount"], reverse=True)   # Sort in descending order using the subsCount
+  if len(_videos):
+    return _videos[0]
+
+  return videos[0]      # If nothing works out, then FALLBACK to the 1st result
+
 
 def spotify2youtube(query):
   youtube = build_youtube_object()
@@ -91,4 +117,5 @@ if __name__=="__main__":
   print "Test!"
   print "Use  --noauth_local_webserver and run spotify2youtube.py to save the credentials"
   youtube = build_youtube_object()
+  pdb.set_trace()
   #spotify2youtube("Google")
