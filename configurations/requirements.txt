@@ -1,0 +1,2 @@
+uwsgi
+google-api-python-client
