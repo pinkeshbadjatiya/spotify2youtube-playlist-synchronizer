@@ -1,14 +1,18 @@
 sudo apt-get update
 sudo apt-get install python-dev python-pip nginx uwsgi uwsgi-plugin-python
-pip install -U -r configurations/requirements.txt
-cd /home/grim/api.armalcolite.ml
+pip install -U -r example_configurations/requirements.txt
+cd /home/ubuntu/public_html/api.armalcolite.ml
 mkdir configs
 cp ./example_configurations/config.json.example ./configs/config.json
 cp ./example_configurations/api-listener.service.example ./configs/api-listener.service
 cp ./example_configurations/api-listener.nginx.conf.example ./configs/api-listener.nginx.conf
 cp ./example_configurations/client_secret_api-listener.json ./configs/client_secret_api-listener.json
 
+echo "#####################################################"
+read -p "Update all the configs and then press enter to continue the setup." AA
+
 # If you are running it for the first time then run using the below command. This will save the google-auth-credentials in a file
+# Try to add a song. Then it will save the credentials
 uwsgi --socket 0.0.0.0:8080 --protocol=http api-listener.ini
 
 # Now we need to start the app using upstart
