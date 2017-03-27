@@ -2,10 +2,10 @@
 # api.armalcolite.ml
 server {
         listen 80;
-        # root /home/ubuntu/public_html/api.armalcolite.ml;     # No need for root directory if you have proxy_pass directive
-        server_name localhost api.armalcolite.ml  www.api.armalcolite.ml;
+        # root <--APP_DIR--->;     # No need for root directory if you have proxy_pass directive
+        server_name localhost api.<--DOMAIN-->  www.api.<--DOMAIN-->;
         location / {
                 include         uwsgi_params;
-                uwsgi_pass      unix:/home/ubuntu/public_html/api.armalcolite.ml/api-listener.sock;
+                uwsgi_pass      unix: <--APP_DIR--->/api-listener.sock;
         }
 }

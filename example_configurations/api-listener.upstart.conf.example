@@ -21,7 +21,7 @@ setuid ubuntu
 setgid www-data
 
 script
-    cd /home/ubuntu/public_html/api.armalcolite.ml
+    cd <--APP_DIR--->
     export PYTHONDONTWRITEBYTECODE=1
     #To allow display of logs from the /log request, use the bash script in the main project
     #directory to change the file ownership :D
