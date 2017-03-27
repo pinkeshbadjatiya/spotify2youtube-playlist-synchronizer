@@ -1,0 +1,30 @@
+#####################################################################
+#
+# We will place this in the /etc/init directory that Upstart checks.
+#
+# 1. Create a soft link using
+#	sudo ln -s ~/public_html/api.armalcolite.ml/configurations/api-listener.conf
+#
+# 2. Upstart does not reload configurations automatically for soft-links, so do it manually
+#	sudo initctl reload-configuration
+#
+# 3. Start the app using
+#	sudo start api-listener
+#
+
+[Unit]
+Description=uWSGI instance to serve api-listener
+After=network.target
+
+[Service]
+User=grim
+Group=www-data
+#Environment="HTTP_PROXY=proxy.iiit.ac.in:8080"
+#Environment="http_proxy=proxy.iiit.ac.in:8080"
+Environment="PYTHONDONTWRITEBYTECODE=1"
+WorkingDirectory=/home/grim/api.armalcolite.ml
+ExecStart=/usr/bin/uwsgi --ini api-listener.ini
+
+
+[Install]
+WantedBy=multi-user.target

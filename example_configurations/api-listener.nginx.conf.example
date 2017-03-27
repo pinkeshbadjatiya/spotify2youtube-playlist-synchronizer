@@ -1,0 +1,11 @@
+# Config file for nginx to proxy request to the uwsgi server
+# api.armalcolite.ml
+server {
+        listen 80;
+        # root /home/ubuntu/public_html/api.armalcolite.ml;     # No need for root directory if you have proxy_pass directive
+        server_name localhost api.armalcolite.ml  www.api.armalcolite.ml;
+        location / {
+                include         uwsgi_params;
+                uwsgi_pass      unix:/home/ubuntu/public_html/api.armalcolite.ml/api-listener.sock;
+        }
+}

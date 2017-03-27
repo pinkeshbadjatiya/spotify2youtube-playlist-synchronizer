@@ -68,12 +68,12 @@ def youtube_search(youtube, query):
 
 
 
-def playlist_add_video(youtube, video_id, playlist_id):
+def playlist_add_video(youtube, video_id, playlist_obj):
   playlist_insert_response = youtube.playlistItems().insert(
     part="snippet,status",
     body=dict(
       snippet=dict(
-	playlistId=playlist_id,
+	playlistId=playlist_obj.id,
 	position=0,
 	resourceId=dict(
 	  videoId=video_id,

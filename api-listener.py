@@ -1,5 +1,11 @@
 from cgi import parse_qs, escape
 import re
+import conf
+
+conf.load_config()
+
+# Import after loading the settings
+from conf import settings
 from api_apps.spotify2youtube import spotify2youtube
 
 
@@ -29,7 +35,6 @@ def logs_main(environ, start_response):
 def spotify2youtube_main(environ, start_response):
     """ Like the example above, but it uses the name specified in the URL.
     """
-
     # get the name from the url if it was specified there.
     args = environ['myapp.url_args']
     # Parge the GET params

@@ -13,6 +13,7 @@ from oauth2client.tools import argparser, run_flow
 
 
 from youtube_helper import youtube_search, playlist_add_video
+from conf import settings
 
 # The CLIENT_SECRETS_FILE variable specifies the name of a file that contains
 # the OAuth 2.0 information for this application, including its client_id and
@@ -24,8 +25,9 @@ from youtube_helper import youtube_search, playlist_add_video
 #   https://developers.google.com/youtube/v3/guides/authentication
 # For more information about the client_secrets.json file format, see:
 #   https://developers.google.com/api-client-library/python/guide/aaa_client_secrets
-CLIENT_SECRET_LOCATION = os.path.join(os.path.dirname(__file__), "../configurations")
-CLIENT_SECRETS_FILE = "client_secret_api-listener.json"
+#CLIENT_SECRET_LOCATION = os.path.join(os.path.dirname(__file__), "../configurations")
+CLIENT_SECRET_LOCATION = settings.youtube.api.client_secret_location
+CLIENT_SECRETS_FILE = settings.youtube.api.client_secrets_file
 
 # This variable defines a message to display if the CLIENT_SECRETS_FILE is
 # missing.
@@ -51,7 +53,7 @@ YOUTUBE_READ_WRITE_SCOPE = "https://www.googleapis.com/auth/youtube"
 YOUTUBE_API_SERVICE_NAME = "youtube"
 YOUTUBE_API_VERSION = "v3"
 
-LAST_REDEMPTION_PLAYLIST = "PLY9u75QG8XbV8pZLq9WMBAgimogrmYiS_"
+PLAYLIST = settings.youtube.playlist
 
 
 
@@ -61,7 +63,7 @@ def build_youtube_object():
     message=MISSING_CLIENT_SECRETS_MESSAGE,
     scope=YOUTUBE_READ_WRITE_SCOPE)
 
-  storage = Storage("googlecredentials-oauth2.json")
+  storage = Storage(settings.youtube.api.credentials_storage)
   credentials = storage.get()
 
   if credentials is None or credentials.invalid:
@@ -123,8 +125,9 @@ def spotify2youtube(query):
   videos = youtube_search(youtube, query)
   video = _select_best_video(videos)
   #print video
-  response = playlist_add_video(youtube, video["videoId"], LAST_REDEMPTION_PLAYLIST)
+  response = playlist_add_video(youtube, video["videoId"], PLAYLIST)
   print response
+  return response
 
 
 if __name__=="__main__":
