@@ -93,8 +93,10 @@ def _select_best_video(videos):
   keywords_list = [
                     ["official", "music", "video"],
                     ["official", "video"],
+                    ["official", "lyric", "video"],
                     ["official", "music", "audio"],
-                    ["official", "lyric", "video"]
+                    ["official", "audio"],
+                    ["audio", "only"]
                   ]
   for keywords in keywords_list:
     for video in _videos:           # First match the 1st tuple across all the videos, then switch to the next set of keywords
