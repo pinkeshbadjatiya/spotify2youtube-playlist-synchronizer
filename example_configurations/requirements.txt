@@ -1,3 +1,6 @@
 uwsgi
 google-api-python-client
 httplib2
+flask
+Flask-ini
+spotipy

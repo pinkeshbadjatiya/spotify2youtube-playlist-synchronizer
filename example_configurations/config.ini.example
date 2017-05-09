@@ -1,0 +1,27 @@
+; NOTE:
+; 1. Do not quote strings
+; 2. true & false are treated as the True and False of python, use this only.
+; 3. All variables will be transformed to uppercase
+
+[FLASK]
+USER_FILE = ./configs/users.txt
+APP_SECRET_KEY = asjdhkyaehjkcahyk
+
+[YOUTUBE_API]
+; Details for initializing the Youtube API
+CLIENT_SECRET_LOCATION = ./configs
+CLIENT_SECRETS_FILE = client_secret_api-listener.json
+CREDENTIALS_STORAGE = googlecredentials-oauth2.json
+
+[SPOTIFY_API]
+USERNAME = pinkeshbadjatiya
+CLIENT_ID = f6f53ad68e53447db3d0f445b17d14d6
+CLIENT_SECRET = 39fd4df534e84de6b37f9d5d8096ad09
+
+[YOUTUBE_PLAYLIST]
+NAME = LastRedemption
+ID = PLY9u75QG8XbV8pZLq9WMBAgimogrmYiS_
+
+[SPOTIFY_PLAYLIST]
+NAME = LastRedemption
+ID = spotify:user:pinkeshbadjatiya:playlist:4IpU3hnDqV8KMZIHPo4LjD

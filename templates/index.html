@@ -1,0 +1,46 @@
+{% extends "layout.html" %}
+{% block body %}
+
+  {% if session.logged_in %}
+  <h2> Logged In as {{ session.username}}</h2>
+  {% endif %}
+
+  <table>
+    <tr>
+      <td><h1>{{ youtube_playlist.name }}</h1><br/>Youtube Playlist</td>
+      <td><h1>{{ spotify_playlist.name }}</h1><br/>Spotify Playlist</td>
+    </tr>
+    {% for youtube_song, spotify_song in zipped_songs %}
+    <tr>
+      <td>
+        {% if youtube_song %}
+        <table>
+          <tr>
+            <td> {{ youtube_song.video_index}} </td>
+            <td><img style="width:100px" src="{{ youtube_song.video_thumbnail }}"/></td>
+            <td>
+              <a href="https://www.youtube.com/watch?v={{ youtube_song.video_id|safe }}"><h2>{{ youtube_song.video_title }}</h2></a>
+            </td>
+          </tr>
+        </table>
+        {% endif %}
+      </td>
+      <td>
+        {% if spotify_song %}
+        <table>
+          <tr>
+            <td> {{ spotify_song.index}} </td>
+            <td><img style="width:100px" src="{{ spotify_song.thumbnail }}"/></td>
+            <td>
+              <h3>{{ spotify_song.name }} | {{ spotify_song.album }}</h3>
+              <p>{{ spotify_song.artists }}</p>
+              <!-- <a href="https://www.youtube.com/watch?v={{ spotify_song.video_id|safe }}"><h2>{{ spotify_song.video_title }}</h2></a> -->
+            </td>
+          </tr>
+        </table>
+        {% endif %}
+      </td>
+    </tr>
+    {% endfor %}
+  </table>
+{% endblock %}

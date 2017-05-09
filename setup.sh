@@ -2,7 +2,7 @@ sudo apt-get update
 sudo apt-get install python-dev python-pip nginx uwsgi uwsgi-plugin-python
 pip install -U -r ./example_configurations/requirements.txt
 rm -rf configs && mkdir configs
-cp ./example_configurations/config.json.example ./configs/config.json
+cp ./example_configurations/config.ini.example ./configs/config.ini
 cp ./example_configurations/api-listener.service.example ./configs/api-listener.service
 cp ./example_configurations/api-listener.nginx.conf.example ./configs/api-listener.nginx.conf
 cp ./example_configurations/client_secret_api-listener.json ./configs/client_secret_api-listener.json
