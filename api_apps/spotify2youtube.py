@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-import sys, pdb
+import sys, pdb, re
 from youtube_helper import build_youtube_object, youtube_search, playlist_add_video
 
 
@@ -26,7 +26,7 @@ def _select_best_video(videos):
                     ["official", "music", "video"],
                     ["official", "video"],
                     ["original", "version"],
-                    ["!video", "!audio", "!lyrics"],
+           #         ["!video", "!audio", "!lyrics"],
                     ["official", "lyric", "video"],
                     ["official", "music", "audio"],
                     ["official", "audio"],
@@ -43,26 +43,38 @@ def _select_best_video(videos):
               all_match = all_match and (keyword in _video_name)
 
       if all_match:
+	  print "Method 1"
           return video
 
   # Method: 2
+  # Return video if it is from a channel that contains "VEVO" in the end :rom the top 3 results
+  _videos = [vid for vid in videos[:3]]        # Get top 3
+  _videos = [vid for vid in _videos if re.match(r'.*VEVO$', vid['channelTitle'])]
+  if len(_videos):
+    print "Method 2"
+    return _videos[0]
+
+
+  # Method: 3
   # If heuristic fails, try to return video with max number of subscribers from the verified channel
   # Try this from the remaining results
-  _videos = [vid for vid in videos[5:] if vid["channelVerified"]]         # Get top 5
+  _videos = [vid for vid in videos[:5] if vid["channelVerified"]]         # Get top 5
   _videos = sorted(videos, key=lambda k: k["channelSubsCount"], reverse=True)   # Sort in descending order using the subsCount
   if len(_videos):
+    print "Method 3"
     return _videos[0]
 
   # Fallback:
   # If nothing works out, then FALLBACK to the 1st result
+  print "Fallback"
   return videos[0]
 
 
 def spotify2youtube(youtube_obj, PLAYLIST, query):
   # youtube = build_youtube_object()
   print "##############################"
-  print "Query: %s" %(query)
-  print "##############################"
+  print "Query: %s" %(query.encode("utf-8"))
+  #print "##############################"
   videos = youtube_search(youtube_obj, query)
   video = _select_best_video(videos)
   #print video
