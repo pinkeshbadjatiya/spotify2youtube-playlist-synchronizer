@@ -151,7 +151,10 @@ def list_playlist_videos(youtube, playlist_obj):
       title = playlist_item["snippet"]["title"]
       index = playlist_item["snippet"]["position"]
       video_id = playlist_item["snippet"]["resourceId"]["videoId"]
-      thumbnail = playlist_item["snippet"]["thumbnails"]["default"]['url']
+      if title == "Private video":
+        thumbnail = "https://www.askdavetaylor.com/wp-content/uploads/2014/10/fm-youtube-video-no-thumbnail.png"
+      else:
+        thumbnail = playlist_item["snippet"]["thumbnails"]["default"]['url']
 
     #   print "%s (%s)\n %s\n" % (title, video_id, thumbnail)
       videos.append({

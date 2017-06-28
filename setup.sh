@@ -1,11 +1,22 @@
 sudo apt-get update
-sudo apt-get install python-dev python-pip nginx uwsgi uwsgi-plugin-python
-pip install -U -r ./example_configurations/requirements.txt
+sudo apt-get install python-dev python-pip libpcre3 libpcre3-dev
+sudo apt-get install uwsgi uwsgi-plugin-python
+pip install --user -U -I -r ./example_configurations/requirements.txt
 rm -rf configs && mkdir configs
 cp ./example_configurations/config.ini.example ./configs/config.ini
 cp ./example_configurations/api-listener.service.example ./configs/api-listener.service
 cp ./example_configurations/api-listener.nginx.conf.example ./configs/api-listener.nginx.conf
 cp ./example_configurations/client_secret_api-listener.json ./configs/client_secret_api-listener.json
+
+
+echo '#################################################################################################'
+echo '#################################################################################################'
+echo '#####                                                                                       #####'
+echo '#####   Setup NGINX and check its configuration for the domain api.armalcolite.ml           #####'
+echo '#####                                                                                       #####'
+echo '#################################################################################################'
+echo '#################################################################################################'
+read temp
 
 echo '#################################################################################################'
 echo '#################################################################################################'
@@ -33,6 +44,9 @@ echo '#####      "googlecredentials-oauth2.json".                               
 echo '#####   >> Now open "http://localhost:8080/spotify2youtube?song=reality%20-%20lost%20frequencies  #####'
 echo '#####      and the uwsgi will print a URL in logs which needs to be accessed to save the          #####'
 echo '#####      credentials. It will then create file "googlecredentials-oauth2.json".                 #####'
+echo '#####      NOTE: If you are running the server as a serivice on AWS or something,                 #####'
+echo '#####            then you can fetch the "localhost:8090/***" URL on the remote machine            #####'
+echo '#####            using wget.							                #####'
 echo '#####   >> Now press Ctrl+C once to kill the uwsgi instance and continue the setup.               #####'
 echo '#####                                                                                             #####'
 echo '#######################################################################################################'
