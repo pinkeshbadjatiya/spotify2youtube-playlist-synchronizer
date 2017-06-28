@@ -95,6 +95,21 @@ def check_channel_verification_status(youtube, channelId):
   return False, int(item["statistics"]["subscriberCount"])
 
 
+def videos_list_by_id(youtube, video_id):
+  """
+      List video details given a video ID.
+  """
+  #kwargs = remove_empty_kwargs(**kwargs) # See full sample for function
+  results = youtube.videos().list(
+    #**kwargs
+    #part='snippet,contentDetails,statistics',
+    part='snippet',
+    id=video_id
+  ).execute()
+
+  return results
+
+
 
 def youtube_search(youtube, query):
   # Call the search.list method to retrieve results matching the specified

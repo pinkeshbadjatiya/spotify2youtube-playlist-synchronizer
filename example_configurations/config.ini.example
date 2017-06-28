@@ -2,10 +2,12 @@
 ; 1. Do not quote strings
 ; 2. true & false are treated as the True and False of python, use this only.
 ; 3. All variables will be transformed to uppercase
+; 4. The directory name should NOT contain "/" in the end
 
 [FLASK]
 USER_FILE = ./configs/users.txt
 APP_SECRET_KEY = asjdhkyaehjkcahyk
+DATA_DIRECTORY = ./data
 
 [YOUTUBE_API]
 ; Details for initializing the Youtube API

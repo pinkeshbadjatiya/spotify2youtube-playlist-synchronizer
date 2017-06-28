@@ -5,7 +5,7 @@ Description=uWSGI instance to serve api-listener
 After=network.target
 
 [Service]
-User=grim
+User=<--USER-OF-THE-SYSTEM-->
 Group=www-data
 #Environment="HTTP_PROXY=proxy.iiit.ac.in:8080"
 #Environment="http_proxy=proxy.iiit.ac.in:8080"

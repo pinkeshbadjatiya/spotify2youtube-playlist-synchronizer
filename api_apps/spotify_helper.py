@@ -18,6 +18,7 @@ def list_playlist_videos(spotify_obj, playlist_obj):
         for i, item in enumerate(tracks['items']):
             track = item['track']
             playlist_tracks.append({
+		'id': track['id'],
                 'name': track['name'],
                 'album': track['album']['name'],
                 'artists': ", ".join([artist['name'] for artist in track['album']['artists']]),

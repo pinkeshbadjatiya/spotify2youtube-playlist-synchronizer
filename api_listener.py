@@ -1,5 +1,5 @@
 # from cgi import parse_qs, escape
-import re
+import re, os
 from flask import Flask
 from flask import request, url_for, render_template
 from flask_ini import FlaskIni
@@ -7,6 +7,7 @@ from flask_ini import FlaskIni
 from functools import wraps
 from flask import g, request, redirect, url_for, session, flash
 import utils
+from api_apps import spotify2youtube, youtube_helper, spotify_helper
 # from flask.ext.login import current_user
 
 def login_required(f):
@@ -25,6 +26,7 @@ with app.app_context():
 app.secret_key = app.iniconfig['FLASK']['APP_SECRET_KEY']
 app.users = utils.load_users(app.iniconfig['FLASK']['USER_FILE'])
 app.youtube_obj, app.spotify_obj = None, None
+
 
 @app.before_request
 def before_request():
@@ -48,8 +50,47 @@ def before_request():
 
 
 
+def load_playlistmap(playlist_id):
+    """ Loads the playlist map from the location "./data/<spotify_playlist_id>/map.txt"
+	Each line of the data file i.e. "map.txt" looks like this: 
+	
+	spotify_song_id,youtube_song_URL
 
-from api_apps import spotify2youtube, youtube_helper, spotify_helper
+    """
+    location = app.iniconfig['FLASK']["DATA_DIRECTORY"] + "/" + playlist_id
+    file_name = location + "/" + "map.txt"
+    if not os.path.isdir(location):
+        os.makedirs(location)
+    if not os.path.isfile(file_name):
+	with open(file_name, "w") as f:
+	    pass
+
+
+    with open(file_name) as f:
+	data = f.readlines()
+    spotify_map = {}
+    for line in data:
+        [spotify_song_id, youtube_id] = line.strip().split(",")
+	result = youtube_helper.videos_list_by_id(app.youtube_obj, youtube_id)
+	spotify_map[spotify_song_id] = {
+	  'video_id': result['items'][0]['id'],	
+	  'video_title': result['items'][0]['snippet']['title'],	
+	  'video_thumbnail': result['items'][0]['snippet']['thumbnails']['default']['url']
+	}
+
+    return spotify_map
+
+
+def update_playlistmap(old_playlist_map, playlist_id, spotify_id, youtube_url):
+    file_name = app.iniconfig["DATA_DIRECTORY"] + "/" + playlist_id + "/" + "map.txt"
+    with open(file_name, "a+") as f:
+	f.write(spotify_id + "," + youtube_url + "\n")
+    old_playlist_map[spotify_id] = youtube_url
+    return old_playlist_map
+
+    
+    
+
 
 
 @app.route("/")
@@ -65,10 +106,10 @@ def index():
         'id': app.iniconfig['SPOTIFY_PLAYLIST']['ID'],
         'songs': spotify_helper.list_playlist_videos(app.spotify_obj, app.iniconfig['SPOTIFY_PLAYLIST'])
     }
+    spotify2youtube_map = load_playlistmap(app.iniconfig['SPOTIFY_PLAYLIST']['ID'])
 
+    # Fill with blank <td>'s so that we have extra rows for extra entries
     you_len, spo_len = len(youtube_playlist['songs']), len(spotify_playlist['songs'])
-    print "YOU:", you_len
-    print "SPO:", spo_len
     if you_len != spo_len:
         if you_len < spo_len:
             youtube_playlist['songs'].extend([None]*(spo_len - you_len))
@@ -76,8 +117,11 @@ def index():
             spotify_playlist['songs'].extend([None]*(you_len - spo_len))
     zipped = zip(youtube_playlist['songs'], spotify_playlist['songs'])
 
-    return render_template('index.html', youtube_playlist=youtube_playlist, spotify_playlist=spotify_playlist,
-                            zipped_songs=zipped)
+    return render_template('index.html', youtube_playlist=youtube_playlist,
+					 spotify_playlist=spotify_playlist,
+                            		 zipped_songs=zipped,
+					 spotify2youtube_map=spotify2youtube_map
+			  )
 
 
 # Use the secret_key in the request to authenticate it.
@@ -96,7 +140,7 @@ def force_update_spotify2youtube():
     for i, video in enumerate(reversed(sp_videos)):     # Add songs in the reverse direction to get the latest one on top
         song = video["artists"] + " - " + video["name"]     # Search format is "video_name - artist1, artist2 artist3"
         response = spotify2youtube.spotify2youtube(app.youtube_obj, app.iniconfig['YOUTUBE_PLAYLIST'], song)
-        print "Added: %d/%d | %s" %(i+1, len(sp_videos), response["snippet"]["title"])
+        print "Added: %d/%d | %s" %(i+1, len(sp_videos), response["snippet"]["title"].encode("utf-8"))
 
     return "Success!"
 
