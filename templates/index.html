@@ -10,7 +10,7 @@
       <tr>
 	<th class="video-index">#</th>
         <th class="playlist-header"><h1>{{ youtube_playlist.name }}</h1><br/>Youtube Playlist</th>
-        <th class="playlist-header"><h1>{{ youtube_playlist.name }}</h1><br/>Mapped Songs</th>
+       <!-- <th class="playlist-header"><h1>{{ youtube_playlist.name }}</h1><br/>Mapped Songs</th> -->
         <th class="playlist-header"><h1>{{ spotify_playlist.name }}</h1><br/>Spotify Playlist</th>
       </tr>
     </thead>
@@ -23,40 +23,42 @@
     	   {% for youtube_song, spotify_song in zipped_songs %}
     	   <tr>
     	     <td class="video-index"> {{ youtube_song.video_index}} </td>
-    	     <td class="playlist-song">
+    	     <td class="playlist-song" data-href="https://www.youtube.com/watch?v={{ youtube_song.video_id|safe }}">
     	       {% if youtube_song %}
     	       <table>
-    	         <tr>
+    	         <tr class="playlist-row">
     	           <td><img style="width:100px" src="{{ youtube_song.video_thumbnail }}"/></td>
     	           <td>
-    	             <a href="https://www.youtube.com/watch?v={{ youtube_song.video_id|safe }}"><h2>{{ youtube_song.video_title }}</h2></a>
+    	             <h2>{{ youtube_song.video_title }}</h2>
     	           </td>
     	         </tr>
     	       </table>
     	       {% endif %}
     	     </td>
-    	     <td class="playlist-song">
-    	       {% if spotify_song.id in spotify2youtube_map %}
+	<!--
+    	     {% if spotify_song.id in spotify2youtube_map %}
+    	     <td class="playlist-song" data-href="https://www.youtube.com/watch?v={{ spotify2youtube_map[spotify_song.id|safe].video_id }}">
     	       <table>
-    	         <tr>
+    	         <tr class="playlist-row">
     	           <td><img style="width:100px" src="{{ spotify2youtube_map[spotify_song.id|safe].video_thumbnail }}"/></td>
     	           <td>
-    	             <a href="https://www.youtube.com/watch?v={{ spotify2youtube_map[spotify_song.id|safe].video_id }}"><h2>{{ spotify2youtube_map[spotify_song.id|safe].video_title }}</h2></a>
+    	             <h2>{{ spotify2youtube_map[spotify_song.id|safe].video_title }}</h2>
     	           </td>
     	         </tr>
     	       </table>
-    	       {% endif %}
     	     </td>
-    	     <td class="playlist-song">
+    	     {% endif %}
+	-->
+    	     <td class="playlist-song" data-href="https://www.youtube.com/watch?v={{ spotify_song.video_id|safe }}">
     	       {% if spotify_song %}
     	       <table>
-    	         <tr>
+    	         <tr class="playlist-row">
     	           <!-- <td> {{ spotify_song.index}} </td> -->
     	           <td><img style="width:100px" src="{{ spotify_song.thumbnail }}"/></td>
     	           <td>
     	             <h3>{{ spotify_song.name }} | {{ spotify_song.album }}</h3>
     	             <p>{{ spotify_song.artists }}</p>
-    	             <!-- <a href="https://www.youtube.com/watch?v={{ spotify_song.video_id|safe }}"><h2>{{ spotify_song.video_title }}</h2></a> -->
+    	             <!-- <h2>{{ spotify_song.video_title }}</h2> -->
     	           </td>
     	         </tr>
     	       </table>
@@ -75,5 +77,11 @@
       contentId: 'main_table_body',
       rows_in_block: 7
     });
+
+    $('td[data-href]').on("click", function() {
+        window.open($(this).data('href'), "_blank");
+    });
+
+
   </script>
 {% endblock %}
