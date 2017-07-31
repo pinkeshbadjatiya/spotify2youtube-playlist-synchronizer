@@ -1,12 +1,16 @@
 sudo apt-get update
-sudo apt-get install python-dev python-pip libpcre3 libpcre3-dev
-sudo apt-get install uwsgi uwsgi-plugin-python
+sudo apt-get -y install python-dev python-pip libpcre3 libpcre3-dev
+sudo apt-get -y install uwsgi uwsgi-plugin-python
 #pip install --user -U -I -r ./example_configurations/requirements.txt
+
+# You have to be present in the folder of the API that contains the example configurations
 sudo pip install -U -I -r ./example_configurations/requirements.txt
 rm -rf configs && mkdir configs
 cp ./example_configurations/config.ini.example ./configs/config.ini
 cp ./example_configurations/api-listener.service.example ./configs/api-listener.service
-cp ./example_configurations/api-listener.nginx.conf.example ./configs/api-listener.nginx.conf
+
+# Ngnix confirguration for serving the API. Please add this to the appropriate location
+cp ./example_configurations/EXTRA.api-listener.nginx.conf.example ./configs/api-listener.nginx.conf
 cp ./example_configurations/client_secret_api-listener.json ./configs/client_secret_api-listener.json
 cp ./example_configurations/users.txt.example ./configs/users.txt
 
@@ -22,15 +26,6 @@ echo '##########################################################################
 echo '#################################################################################################'
 read temp
 
-
-echo '#################################################################################################'
-echo '#################################################################################################'
-echo '#####                                                                                       #####'
-echo '#####   Setup NGINX and check its configuration for the domain api.armalcolite.ml           #####'
-echo '#####                                                                                       #####'
-echo '#################################################################################################'
-echo '#################################################################################################'
-read temp
 
 echo '#################################################################################################'
 echo '#################################################################################################'
