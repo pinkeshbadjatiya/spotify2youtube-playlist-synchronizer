@@ -104,7 +104,7 @@ def index():
     spotify_playlist = {
         'name': app.iniconfig['SPOTIFY_PLAYLIST']['NAME'],
         'id': app.iniconfig['SPOTIFY_PLAYLIST']['ID'],
-        'songs': spotify_helper.list_playlist_videos(app.spotify_obj, app.iniconfig['SPOTIFY_PLAYLIST'])
+        'songs': spotify_helper.list_playlist_videos(app.spotify_obj, app.iniconfig['SPOTIFY_PLAYLIST'], sort_by='!added_at')
     }
     spotify2youtube_map = load_playlistmap(app.iniconfig['SPOTIFY_PLAYLIST']['ID'])
 
@@ -135,7 +135,7 @@ def force_update_spotify2youtube():
         print "Delete - %d/%d" %(i+1, len(yt_videos))
 
     # Add videos from spotify playlist
-    sp_videos = spotify_helper.list_playlist_videos(app.spotify_obj, app.iniconfig['SPOTIFY_PLAYLIST'])
+    sp_videos = spotify_helper.list_playlist_videos(app.spotify_obj, app.iniconfig['SPOTIFY_PLAYLIST'], sort_by='!added_at')
     print "SP total videos: %d" %(len(sp_videos))
     for i, video in enumerate(reversed(sp_videos)):     # Add songs in the reverse direction to get the latest one on top
         song = video["artists"] + " - " + video["name"]     # Search format is "video_name - artist1, artist2 artist3"

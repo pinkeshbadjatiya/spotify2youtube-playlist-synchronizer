@@ -6,10 +6,13 @@ sudo pip install -U -I -r ./example_configurations/requirements.txt
 rm -rf configs && mkdir configs
 cp ./example_configurations/config.ini.example ./configs/config.ini
 cp ./example_configurations/api-listener.service.example ./configs/api-listener.service
-cp ./example_configurations/api-listener.nginx.conf.example ./configs/api-listener.nginx.conf
+cp ./example_configurations/EXTRA.api-listener.nginx.conf.example ./configs/api-listener.nginx.conf
 cp ./example_configurations/client_secret_api-listener.json ./configs/client_secret_api-listener.json
 cp ./example_configurations/users.txt.example ./configs/users.txt
 
+# Setup folder for log files for uwsgi
+sudo mkdir -p /var/log/uwsgi
+sudo chown -R ubuntu:ubuntu /var/log/uwsgi
 
 echo '#################################################################################################'
 echo '#################################################################################################'
@@ -92,6 +95,21 @@ sudo systemctl start api-listener
 sudo systemctl status api-listener
 sudo systemctl enable api-listener
 
+
+echo '#################################################################################################'
+echo '#################################################################################################'
+echo '#####                                                                                       #####'
+echo '#####   IMPORTANT: You will get the following error >>>                                     #####'
+echo '#####              nginx: [emerg] too long path in the unix domain socket in upstream       #####'
+echo '#####                                                                                       #####'
+echo '#####              To fix it move the socket directory path to one-level up i.e. in         #####'
+echo '#####              in /armalcolite.ml/public_html/bla-bla-bla-bla.sock                                  #####'
+echo '#####                                                                                       #####'
+echo '#####   >> Once Done pres any key to continue...                                            #####'
+echo '#####                                                                                       #####'
+echo '#################################################################################################'
+echo '#################################################################################################'
+read temp
 # Now attach the uwsgi app with nginx
 # NOTE: Make sure you do not have anything else running on port 80
 sudo ln -s $PWD/configs/api-listener.nginx.conf /etc/nginx/sites-enabled/
