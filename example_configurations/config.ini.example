@@ -17,13 +17,13 @@ CREDENTIALS_STORAGE = googlecredentials-oauth2.json
 
 [SPOTIFY_API]
 USERNAME = pinkeshbadjatiya
-CLIENT_ID = f6f53ad68e53447db3d0f445b17d14d6
-CLIENT_SECRET = 39fd4df534e84de6b37f9d5d8096ad09
+CLIENT_ID = f6f53ad....b17d14d6
+CLIENT_SECRET = 39fd4df....8096ad09
 
 [YOUTUBE_PLAYLIST]
 NAME = LastRedemption
-ID = PLY9u75QG8XbV8pZLq9WMBAgimogrmYiS_
+ID = PLY9u75Q....imogrmYiS_
 
 [SPOTIFY_PLAYLIST]
 NAME = LastRedemption
-ID = spotify:user:pinkeshbadjatiya:playlist:4IpU3hnDqV8KMZIHPo4LjD
+ID = spotify:user:pinkeshbad....nDqV8KMZIHPo4LjD
